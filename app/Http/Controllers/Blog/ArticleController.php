@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Blog;
 
 use App\Http\Controllers\Controller;
+use App\Models\BlogArticle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
@@ -14,10 +16,9 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $items = \App\Models\BlogArticle::all();
-        dd($items->first());
+        $paginator = BlogArticle::paginate(5);
 
-        return view('blog.articles.index', ['items' => $items]);
+        return view('blog.articles.index', ['paginator' => $paginator]);
     }
 
     /**

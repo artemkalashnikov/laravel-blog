@@ -29,11 +29,9 @@ class BlogArticleFactory extends Factory
         return [
             'category_id'  => rand(1, 11),
             'user_id'      => rand(1, 2),
-            'slug'         => Str::slug($title),
             'title'        => $title,
             'fragment'     => $this->faker->text(rand(40, 100)),
-            'content_raw'  => $text,
-            'content_html' => $text,
+            'content'      => $text,
             'is_published' => $isPublished,
             'published_at' => $isPublished ? $this->faker->dateTimeBetween('-2 months', '-1 days') : null,
             'created_at'   => $this->faker->dateTimeBetween('-3 months', '-2 months'),

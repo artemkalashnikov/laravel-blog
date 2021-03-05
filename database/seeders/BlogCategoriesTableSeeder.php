@@ -17,11 +17,10 @@ class BlogCategoriesTableSeeder extends Seeder
         $categories = [];
 
         for ($i = 0; $i <= 10; $i++) {
-            $categoryName = $i == 0 ? 'Без категории' : 'Категория ' . $i;
+            $categoryName = $i == 0 ? 'No category' : 'Category ' . $i;
 
             $categories[] = [
                 'title'      =>  $categoryName,
-                'slug'       => Str::slug($categoryName),
                 'created_at' => now(),
             ];
         }

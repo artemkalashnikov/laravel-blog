@@ -1,9 +1,14 @@
 <table>
-    @foreach($items as $item)
+    @foreach($paginator as $blogItem)
         <tr>
-            <td>{{ $item->id }}</td>
-            <td>{{ $item->title }}</td>
-            <td>{{ $item->created_at }}</td>
+            <td>{{ $blogItem->id }}</td>
+            <td>{{ $blogItem->title }}</td>
+            <td>{{ $blogItem->created_at }}</td>
         </tr>
     @endforeach
 </table>
+<div>
+    @if($paginator->total() > $paginator->count())
+        {{$paginator->links()}}
+    @endif
+</div>

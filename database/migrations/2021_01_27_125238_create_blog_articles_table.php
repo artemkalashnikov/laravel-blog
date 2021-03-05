@@ -17,11 +17,9 @@ class CreateBlogArticlesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('category_id')->default(1);
             $table->unsignedBigInteger('user_id')->default(1);
-            $table->string('slug')->unique();
             $table->string('title');
             $table->text('fragment')->nullable();
-            $table->text('content_raw');
-            $table->text('content_html');
+            $table->text('content');
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
             $table->timestamps();

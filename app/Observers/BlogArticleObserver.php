@@ -13,15 +13,14 @@ class BlogArticleObserver
      */
     public function saving(BlogArticle $blogArticle)
     {
-        $isPublished = request()->input('is_published');
-        $publishedAt = $blogArticle->getAttribute('published_at');
+        $isDirtyIsPublished = $blogArticle->isDirty('is_published');
+        $isPublished = $blogArticle->getAttribute('is_published');
 
-        if ($isPublished && $publishedAt === null) {
-
+        if ($isDirtyIsPublished && $isPublished) {
             $blogArticle->fill([
                 'published_at' => now(),
             ]);
-        } else if (!$isPublished){
+        } else if ($isDirtyIsPublished && !$isPublished){
 
             $blogArticle->fill([
                 'published_at' => null,

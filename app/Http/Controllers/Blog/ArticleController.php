@@ -2,88 +2,69 @@
 
 namespace App\Http\Controllers\Blog;
 
+use App\Filters\ArticleFilters\ArticleAuthorFilter;
+use App\Filters\ArticleFilters\ArticleCategoryFilter;
+use App\Filters\ArticleFilters\ArticleTitleFilter;
+use App\Filters\QueryFiltersCollection;
 use App\Http\Controllers\Controller;
 use App\Models\BlogArticle;
+use App\Models\BlogCategory;
+use App\Models\User;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class ArticleController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     * @param Request $request
+     * @return Application|Factory|View|Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $paginator = BlogArticle::paginate(5);
+        $filters = QueryFiltersCollection::make([
+            new ArticleTitleFilter($request->input('title')),
+            new ArticleCategoryFilter($request->input('category')),
+            new ArticleAuthorFilter($request->input('author')),
+        ]);
 
-        return view('blog.articles.index', ['paginator' => $paginator]);
-    }
+        $articles = BlogArticle::on()
+            ->filter($filters)
+            ->published()
+            ->select(['id', 'title', 'fragment', 'is_published', 'published_at', 'user_id', 'category_id', 'created_at'])
+            ->with(['user:id,name', 'category:id,title'])
+            ->orderBy('title')
+            ->orderByDesc('published_at');
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        $categories = BlogCategory::on()
+            ->select(['id', 'title'])
+            ->get();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        $users = User::on()
+            ->select(['id', 'name'])
+            ->get();
+
+        $paginator = $articles->paginate(15)->withQueryString();
+
+        return view('blog.articles.index', [
+            'articlesPaginator' => $paginator,
+            'categories' => $categories,
+            'users' => $users,
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        dd('Hello');
     }
 }

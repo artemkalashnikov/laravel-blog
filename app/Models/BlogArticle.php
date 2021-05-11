@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filters\QueryFiltersCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,7 +22,7 @@ class BlogArticle extends Model
     ];
 
     /**
-     * Display only published articles
+     * Return only published articles
      * @param $query
      * @return mixed
      */
@@ -31,24 +32,13 @@ class BlogArticle extends Model
     }
 
     /**
-     * Display filtered articles by filter on index page
+     * Filtering articles
      * @param $query
-     * @param Request $request
+     * @param QueryFiltersCollection $filters
      */
-    public function scopeFiltered($query, Request $request)
+    public function scopeFilter($query, QueryFiltersCollection $filters)
     {
-        if ($request->filled('title')) {
-            $query->where('title', 'LIKE', '%' . $request->input('title') . '%');
-        }
-        if ($request->filled('category')) {
-            $query->where('category_id', '=', $request->input('category'));
-        }
-        if ($request->filled('author')) {
-            $query->where('user_id', '=', $request->input('author'));
-        }
-        if ($request->filled('published')) {
-            $query->where('is_published', '=', $request->input('published'));
-        }
+        $filters->apply($query);
     }
 
     /**

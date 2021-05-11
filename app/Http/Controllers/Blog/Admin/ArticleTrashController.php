@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
+use App\Filters\ArticleFilters\ArticleAuthorFilter;
+use App\Filters\ArticleFilters\ArticleCategoryFilter;
+use App\Filters\ArticleFilters\ArticleIsPublishedFilter;
+use App\Filters\ArticleFilters\ArticleTitleFilter;
+use App\Filters\QueryFiltersCollection;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BlogArticleUpdateRequest;
+use App\Http\Requests\BlogArticleRequest;
 use App\Models\BlogArticle;
 use App\Models\BlogCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ArticleTrashController extends Controller
 {
@@ -19,11 +25,21 @@ class ArticleTrashController extends Controller
      */
     public function index(Request $request)
     {
+        $filters = QueryFiltersCollection::make([
+            new ArticleTitleFilter($request->input('title')),
+            new ArticleCategoryFilter($request->input('category')),
+            new ArticleIsPublishedFilter($request->input('published')),
+        ]);
+
+        if (!$request->user()->isAdmin()) {
+            $filters->push(new ArticleAuthorFilter($request->user()->id));
+        }
+
         $articles = BlogArticle::onlyTrashed()
-            ->filtered($request)
+            ->filter($filters)
             ->select(['id', 'title', 'fragment', 'is_published', 'published_at', 'user_id', 'category_id', 'created_at'])
             ->with(['user:id,name', 'category:id,title'])
-            ->orderBy('published_at', 'desc');
+            ->orderByDesc('published_at');
 
         $categories = BlogCategory::on()
             ->select(['id', 'title'])
@@ -52,15 +68,20 @@ class ArticleTrashController extends Controller
     {
         $article = BlogArticle::onlyTrashed()->find($id);
 
-        $categories = BlogCategory::on()
-            ->select(['id', 'title'])
-            ->get();
-
         if ($article === null) {
             return back()
                 ->withErrors('Article not found')
                 ->withInput();
         }
+
+        if (!Gate::allows('update', $article)) {
+            return back()
+                ->withErrors('You don\'t have permissions');
+        }
+
+        $categories = BlogCategory::on()
+            ->select(['id', 'title'])
+            ->get();
 
         return view('blog.admin.trash.articles.edit', [
             'article' => $article,
@@ -71,11 +92,11 @@ class ArticleTrashController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param BlogArticleUpdateRequest $request
+     * @param BlogArticleRequest $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(BlogArticleUpdateRequest $request, $id)
+    public function update(BlogArticleRequest $request, $id)
     {
         $article = BlogArticle::onlyTrashed()->find($id);
 
@@ -83,6 +104,11 @@ class ArticleTrashController extends Controller
             return back()
                 ->withErrors('Article not found')
                 ->withInput();
+        }
+
+        if (!Gate::allows('update', $article)) {
+            return back()
+                ->withErrors('You don\'t have permissions');
         }
 
         $result = $article->restore();
@@ -106,9 +132,14 @@ class ArticleTrashController extends Controller
      */
     public function destroy($id)
     {
-        $result = BlogArticle::onlyTrashed()
-            ->find($id)
-            ->forceDelete();
+        $article = BlogArticle::onlyTrashed()->find($id);
+
+        if (!Gate::allows('update', $article)) {
+            return back()
+                ->withErrors('You don\'t have permissions');
+        }
+
+        $result = $article->forceDelete();
 
         if (!$result) {
             return back()

@@ -15,15 +15,17 @@ class UsersTableSeeder extends Seeder
     {
         $data = [
             [
-                'name'       => 'No name',
+                'name'       => 'Alena',
                 'email'      => 'unknown@user.mail',
                 'password'   => bcrypt('54321'),
+                'is_admin'   => false,
                 'created_at' => now(),
             ],
             [
                 'name'       => 'Artem',
                 'email'      => 'ak74am@gmail.com',
                 'password'   => bcrypt('12345'),
+                'is_admin'   => true,
                 'created_at' => now(),
             ],
         ];

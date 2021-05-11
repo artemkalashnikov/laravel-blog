@@ -1,30 +1,27 @@
 @include('blog.components.header')
 <div class="flex-grow">
-    <div class="pb-6 flex justify-between">
-        <div>
-            <a href="{{ route('blog.admin.articles.index') }}" class="flex items-center justify-center w-32 h-8 text-gray-600 bg-white border border-solid border-gray-600 rounded">Back</a>
-        </div>
-        @include('blog.components.admin.menu')
+    <div class="pb-6">
+        <a href="{{ route('blog.articles.index') }}" class="flex items-center justify-center w-32 h-8 text-gray-600 bg-white border border-solid border-gray-600 rounded">Back</a>
     </div>
-    <form id="data" action="{{ route('blog.admin.articles.store') }}" method="POST">
+    <form id="data" action="{{ route('blog.articles.store') }}" method="POST">
         @csrf
         <label class="flex items-center justify-between mb-4">
             <span class="font-bold mr-8 select-none">Title:</span>
-            <input class="w-4/5 bg-white border border-solid border-gray-600 rounded py-1" name="title" type="text" placeholder="title" minlength="3" maxlength="200" required value="{{ old('title') }}">
+            <input class="w-4/5 bg-white border border-solid border-gray-600 rounded py-1" name="title" type="text" placeholder="title" minlength="3" maxlength="200" required>
         </label>
         <label class="flex items-start justify-between mb-4">
             <span class="font-bold mr-8 select-none">Content:</span>
-            <textarea class="w-4/5 h-40 resize-none bg-white border border-solid border-gray-600 rounded py-1" name="content" placeholder="content" required minlength="5" maxlength="10000">{{ old('content') }}</textarea>
+            <textarea class="w-4/5 h-40 resize-none bg-white border border-solid border-gray-600 rounded py-1" name="content" placeholder="content" required minlength="5" maxlength="10000"></textarea>
         </label>
         <label class="flex items-start justify-between mb-4">
             <span class="font-bold mr-8 select-none">Fragment:</span>
-            <textarea class="w-4/5 h-40 resize-none bg-white border border-solid border-gray-600 rounded py-1" name="fragment" placeholder="fragment" maxlength="500">{{ old('fragment') }}</textarea>
+            <textarea class="w-4/5 h-40 resize-none bg-white border border-solid border-gray-600 rounded py-1" name="fragment" placeholder="fragment" maxlength="500"></textarea>
         </label>
         <label class="flex items-center justify-between mb-4">
             <span class="font-bold mr-8 select-none">Category:</span>
             <select class="w-4/5 bg-white border border-solid border-gray-600 rounded py-1" name="category_id" required>
                 @foreach($categories as $category)
-                    <option value="{{ $category->id }}" @if($category->id == old('category_id')) selected="selected" @endif>
+                    <option value="{{ $category->id }}">
                         {{ $category->title }}
                     </option>
                 @endforeach
@@ -34,7 +31,7 @@
         <div class="flex items-start justify-between mb-4">
             <label for="checkbox" class="font-bold mr-8 select-none">Published:</label>
             <span class="flex items-start w-4/5">
-                <input id="checkbox" class="rounded" name="is_published" type="checkbox" value="1" @if(old('is_published') === '1') checked @endif>
+                <input id="checkbox" class="rounded" name="is_published" type="checkbox" value="1">
             </span>
         </div>
     </form>

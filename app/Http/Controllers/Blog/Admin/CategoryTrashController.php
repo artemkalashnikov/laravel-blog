@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Blog\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BlogCategoryUpdateRequest;
+use App\Http\Requests\BlogCategoryRequest;
 use App\Models\BlogCategory;
 
 class CategoryTrashController extends Controller
@@ -44,11 +44,11 @@ class CategoryTrashController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param BlogCategoryUpdateRequest $request
+     * @param BlogCategoryRequest $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(BlogCategoryUpdateRequest $request, $id)
+    public function update(BlogCategoryRequest $request, $id)
     {
         $category = BlogCategory::onlyTrashed()->find($id);
 

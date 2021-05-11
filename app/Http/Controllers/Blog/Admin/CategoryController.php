@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Blog\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BlogCategoryCreateRequest;
-use App\Http\Requests\BlogCategoryUpdateRequest;
+use App\Http\Requests\BlogCategoryRequest;
 use App\Models\BlogCategory;
 
 class CategoryController extends Controller
@@ -36,10 +35,10 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param BlogCategoryCreateRequest $request
+     * @param BlogCategoryRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(BlogCategoryCreateRequest $request)
+    public function store(BlogCategoryRequest $request)
     {
         $data = $request->all();
         $category = BlogCategory::on()->create($data);
@@ -77,11 +76,11 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param BlogCategoryUpdateRequest $request
+     * @param BlogCategoryRequest $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(BlogCategoryUpdateRequest $request, $id)
+    public function update(BlogCategoryRequest $request, $id)
     {
         $category = BlogCategory::on()->find($id);
 

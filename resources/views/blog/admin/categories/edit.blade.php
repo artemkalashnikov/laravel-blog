@@ -1,4 +1,4 @@
-@include('blog.components.admin.header')
+@include('blog.components.header')
 @include('blog.components.admin.sidebar')
 <div class="flex-grow">
     <div class="pb-6 flex justify-between">

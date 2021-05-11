@@ -10,14 +10,6 @@
                 </option>
             @endforeach
         </select>
-        <select class="mb-2 w-full block bg-white border border-solid border-gray-600 rounded py-0 h-8" name="author">
-            <option value="" selected>Author name</option>
-            @foreach($users as $user)
-                <option value="{{ $user->id }}" @if(!empty(request()->query('author')) && (request()->query('author')) == $user->id) selected @endif>
-                    {{ $user->name }}
-                </option>
-            @endforeach
-        </select>
         <label class="flex mb-2 justify-between items-center">
             <span>Not published</span>
             <input type="radio" name="published" value="0" @if(request()->exists('published') && (request()->query('published') == 0)) checked @endif>

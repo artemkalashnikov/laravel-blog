@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class BlogCategoryUpdateRequest extends FormRequest
+class BlogCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,11 @@ class BlogCategoryUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        if(Auth::check()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

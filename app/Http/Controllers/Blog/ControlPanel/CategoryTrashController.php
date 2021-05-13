@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Blog\Admin;
+namespace App\Http\Controllers\Blog\ControlPanel;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BlogCategoryRequest;
@@ -19,7 +19,10 @@ class CategoryTrashController extends Controller
             ->select(['id', 'title', 'description', 'created_at'])
             ->paginate(15);
 
-        return view('blog.admin.trash.categories.index', ['categoriesPaginator' => $paginator]);
+        return view('blog.control-panel.trash.categories.index', [
+            'title'                 =>    __('blog.header-categories-show-trash'),
+            'categoriesPaginator'   =>    $paginator,
+        ]);
     }
 
     /**
@@ -32,13 +35,16 @@ class CategoryTrashController extends Controller
     {
         $category = BlogCategory::onlyTrashed()->find($id);
 
-        if ($category === null) {
+        if (empty($category)) {
             return back()
-                ->withErrors('Category not found')
+                ->withErrors(__('blog.error-category-not-found'))
                 ->withInput();
         }
 
-        return view('blog.admin.trash.categories.edit', ['category' => $category]);
+        return view('blog.control-panel.trash.categories.edit', [
+            'title'         =>  __('blog.header-category-edit'),
+            'category'      =>  $category,
+        ]);
     }
 
     /**
@@ -54,7 +60,7 @@ class CategoryTrashController extends Controller
 
         if (empty($category)) {
             return back()
-                ->withErrors('Category not found')
+                ->withErrors(__('blog.error-category-not-found'))
                 ->withInput();
         }
 
@@ -62,13 +68,13 @@ class CategoryTrashController extends Controller
 
         if (!$result) {
             return back()
-                ->withErrors('Category not restored')
+                ->withErrors(__('blog.error-category-not-restored'))
                 ->withInput();
         }
 
         return redirect()
-            ->route('blog.admin.trash.categories.index')
-            ->with('status', 'Restore successful');
+            ->route('blog.control-panel.trash.categories.index')
+            ->with('status', __('blog.success-category-restored'));
     }
 
     /**
@@ -79,17 +85,23 @@ class CategoryTrashController extends Controller
      */
     public function destroy($id)
     {
-        $result = BlogCategory::onlyTrashed()
-            ->find($id)
-            ->forceDelete();
+        $category = BlogCategory::onlyTrashed()->find($id);
+
+        if (empty($category)) {
+            return back()
+                ->withErrors(__('blog.error-category-not-found'))
+                ->withInput();
+        }
+
+        $result = $category->forceDelete();
 
         if (!$result) {
             return back()
-                ->withErrors('Article not deleted');
+                ->withErrors(__('blog.error-category-not-deleted'));
         }
 
         return redirect()
-            ->route('blog.admin.trash.categories.index')
-            ->with('status', 'Category was deleted');
+            ->route('blog.control-panel.trash.categories.index')
+            ->with('status', __('blog.success-category-deleted'));
     }
 }

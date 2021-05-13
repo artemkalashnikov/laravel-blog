@@ -17,7 +17,7 @@ class Administrator
     public function handle(Request $request, Closure $next)
     {
         if (!$request->user()->isAdmin()) {
-            return redirect(route('blog.admin.articles.index'))
+            return redirect(route('blog.control-panel.articles.index'))
                 ->withErrors('You are not administrator');
         }
 

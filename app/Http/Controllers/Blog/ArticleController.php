@@ -51,9 +51,9 @@ class ArticleController extends Controller
         $paginator = $articles->paginate(15)->withQueryString();
 
         return view('blog.articles.index', [
-            'articlesPaginator' => $paginator,
-            'categories' => $categories,
-            'users' => $users,
+            'articlesPaginator' =>  $paginator,
+            'categories'        =>  $categories,
+            'users'             =>  $users,
         ]);
     }
 

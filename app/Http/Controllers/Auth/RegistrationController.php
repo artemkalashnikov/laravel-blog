@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Auth;
 class RegistrationController extends Controller
 {
     /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function index()
+    {
+        return view('blog.auth.registration', [
+            'title' => __('blog.header-registration'),
+        ]);
+    }
+
+    /**
      * @param RegistrationRequest $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

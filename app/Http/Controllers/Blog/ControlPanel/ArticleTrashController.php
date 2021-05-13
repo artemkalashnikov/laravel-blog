@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Blog\Admin;
+namespace App\Http\Controllers\Blog\ControlPanel;
 
 use App\Filters\ArticleFilters\ArticleAuthorFilter;
 use App\Filters\ArticleFilters\ArticleCategoryFilter;
@@ -15,7 +15,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class ArticleController extends Controller
+class ArticleTrashController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,12 +35,11 @@ class ArticleController extends Controller
             $filters->push(new ArticleAuthorFilter($request->user()->id));
         }
 
-        $articles = BlogArticle::on()
+        $articles = BlogArticle::onlyTrashed()
             ->filter($filters)
             ->select(['id', 'title', 'fragment', 'is_published', 'published_at', 'user_id', 'category_id', 'created_at'])
             ->with(['user:id,name', 'category:id,title'])
-            ->orderByDesc('published_at')
-            ->orderByDesc('id');
+            ->orderByDesc('published_at');
 
         $categories = BlogCategory::on()
             ->select(['id', 'title'])
@@ -52,77 +51,43 @@ class ArticleController extends Controller
 
         $paginator = $articles->paginate(15)->withQueryString();
 
-        return view('blog.admin.articles.index', [
-            'articlesPaginator' => $paginator,
-            'categories' => $categories,
-            'users' => $users || null,
+        return view('blog.control-panel.trash.articles.index', [
+            'title'             => __('blog.header-articles-show-trash'),
+            'articlesPaginator' =>  $paginator,
+            'categories'        =>  $categories,
+            'users'             =>  $users,
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $categories = BlogCategory::on()
-            ->select(['id', 'title'])
-            ->get();
-
-        return view('blog.admin.articles.create', ['categories' => $categories]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param BlogArticleRequest $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function store(BlogArticleRequest $request)
-    {
-        $data = $request->all();
-        $article = BlogArticle::on()->create($data);
-
-        if (!$article->exists) {
-            return back()
-                ->withErrors('Article not created')
-                ->withInput();
-        }
-
-        return redirect()
-            ->route('blog.admin.articles.edit', $article->id)
-            ->with('status', 'Created successfully');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function edit($id)
     {
-        $article = BlogArticle::on()->find($id);
+        $article = BlogArticle::onlyTrashed()->find($id);
 
-        if ($article === null) {
+        if (empty($article)) {
             return back()
-                ->withErrors('Article not found')
+                ->withErrors(__('blog.error-article-not-found'))
                 ->withInput();
         }
 
-        if (!Gate::allows('update', $article)) {
+        if (Gate::denies('update', $article)) {
             return back()
-                ->withErrors('You don\'t have permissions');
+                ->withErrors(__('blog.error-permissions'));
         }
 
         $categories = BlogCategory::on()
             ->select(['id', 'title'])
             ->get();
 
-        return view('blog.admin.articles.edit', [
-            'article' => $article,
-            'categories' => $categories,
+        return view('blog.control-panel.trash.articles.edit', [
+            'title'         =>  __('blog.header-article-edit'),
+            'article'       =>  $article,
+            'categories'    =>  $categories,
         ]);
     }
 
@@ -135,57 +100,62 @@ class ArticleController extends Controller
      */
     public function update(BlogArticleRequest $request, $id)
     {
-        $article = BlogArticle::on()->find($id);
+        $article = BlogArticle::onlyTrashed()->find($id);
 
         if (empty($article)) {
             return back()
-                ->withErrors('Article not found')
+                ->withErrors(__('blog.error-article-not-found'))
                 ->withInput();
         }
 
-        if (!Gate::allows('update', $article)) {
+        if (Gate::denies('update', $article)) {
             return back()
-                ->withErrors('You don\'t have permissions');
+                ->withErrors(__('blog.error-permissions'));
         }
 
-        $data = $request->all();
-        $result = $article->update($data);
+        $result = $article->restore();
 
         if (!$result) {
             return back()
-                ->withErrors('Article not updated')
+                ->withErrors(__('blog.error-article-not-restored'))
                 ->withInput();
         }
 
         return redirect()
-            ->route('blog.admin.articles.edit', $article->id)
-            ->with('status', 'Update was successful');
+            ->route('blog.control-panel.trash.articles.index')
+            ->with('status', __('blog.success-article-restored'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
-        $article = BlogArticle::on()->find($id);
+        $article = BlogArticle::onlyTrashed()->find($id);
 
-        if (!Gate::allows('update', $article)) {
+        if (empty($article)) {
             return back()
-                ->withErrors('You don\'t have permissions');
+                ->withErrors(__('blog.error-article-not-found'))
+                ->withInput();
         }
 
-        $result = $article->delete();
+        if (Gate::denies('update', $article)) {
+            return back()
+                ->withErrors(__('blog.error-permissions'));
+        }
+
+        $result = $article->forceDelete();
 
         if (!$result) {
             return back()
-                ->withErrors('Article not deleted');
+                ->withErrors(__('blog.error-article-not-deleted'));
         }
 
         return redirect()
-            ->route('blog.admin.articles.index')
-            ->with('status', 'Article was deleted');
+            ->route('blog.control-panel.trash.articles.index')
+            ->with('status', __('blog.success-article-deleted'));
     }
 }

@@ -9,7 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    // TODO: create request validator
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function index()
+    {
+        return view('blog.auth.login', [
+            'title' => __('blog.header-login'),
+        ]);
+    }
+
     /**
      * @param LoginRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -21,7 +30,7 @@ class LoginController extends Controller
         if (!Auth::attempt($credentials)) {
             return back()
                 ->withInput()
-                ->withErrors('Email or password was wrong. Try again.');
+                ->withErrors(__('auth.failed'));
         }
 
         $request->session()->regenerate();

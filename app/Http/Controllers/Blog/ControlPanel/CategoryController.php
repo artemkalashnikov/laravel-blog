@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Blog\Admin;
+namespace App\Http\Controllers\Blog\ControlPanel;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BlogCategoryRequest;
@@ -19,7 +19,10 @@ class CategoryController extends Controller
             ->select(['id', 'title', 'description', 'created_at'])
             ->paginate(15);
 
-        return view('blog.admin.categories.index', ['categoriesPaginator' => $paginator]);
+        return view('blog.control-panel.categories.index', [
+            'title'                 =>  __('blog.header-categories-show'),
+            'categoriesPaginator'   =>  $paginator,
+        ]);
     }
 
     /**
@@ -29,7 +32,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('blog.admin.categories.create');
+        return view('blog.control-panel.categories.create', ['title' => __('blog.header-category-create')]);
     }
 
     /**
@@ -45,13 +48,13 @@ class CategoryController extends Controller
 
         if (!$category->exists) {
             return back()
-                ->withErrors('Category not created')
+                ->withErrors(__('blog.error-category-not-created'))
                 ->withInput();
         }
 
         return redirect()
-            ->route('blog.admin.categories.edit', $category->id)
-            ->with('status', 'Created successfully');
+            ->route('blog.control-panel.categories.edit', $category->id)
+            ->with('status', __('blog.success-category-created'));
     }
 
     /**
@@ -64,13 +67,16 @@ class CategoryController extends Controller
     {
         $category = BlogCategory::on()->find($id);
 
-        if ($category === null) {
+        if (empty($category)) {
             return back()
-                ->withErrors('Category not found')
+                ->withErrors(__('blog.error-category-not-found'))
                 ->withInput();
         }
 
-        return view('blog.admin.categories.edit', ['category' => $category]);
+        return view('blog.control-panel.categories.edit', [
+            'title'     =>   __('blog.header-category-edit'),
+            'category'  =>   $category,
+        ]);
     }
 
     /**
@@ -86,7 +92,7 @@ class CategoryController extends Controller
 
         if (empty($category)) {
             return back()
-                ->withErrors('Category not found')
+                ->withErrors(__('blog.error-category-not-found'))
                 ->withInput();
         }
 
@@ -95,13 +101,13 @@ class CategoryController extends Controller
 
         if (!$result) {
             return back()
-                ->withErrors('Category not updated')
+                ->withErrors(__('blog.error-category-not-updated'))
                 ->withInput();
         }
 
         return redirect()
-            ->route('blog.admin.categories.edit', $category->id)
-            ->with('status', 'Category saved successful');
+            ->route('blog.control-panel.categories.edit', $category->id)
+            ->with('status', __('blog.success-category-updated'));
     }
 
     /**
@@ -116,11 +122,11 @@ class CategoryController extends Controller
 
         if (!$result) {
             return back()
-                ->withErrors('Category not deleted');
+                ->withErrors(__('blog.error-category-not-deleted'));
         }
 
         return redirect()
-            ->route('blog.admin.categories.index')
-            ->with('status', 'Category was deleted');
+            ->route('blog.control-panel.categories.index')
+            ->with('status', __('blog.success-category-deleted'));
     }
 }

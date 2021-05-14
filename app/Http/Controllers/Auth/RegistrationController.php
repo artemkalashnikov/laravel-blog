@@ -32,6 +32,7 @@ class RegistrationController extends Controller
         $user = User::on()->create($data);
         Auth::login($user);
 
-        return redirect(route('blog.articles.index'));
+        return redirect(route('blog.articles.index'))
+            ->with('status', __('blog.success-hello-user', ['name' => $request->user()->name]));
     }
 }

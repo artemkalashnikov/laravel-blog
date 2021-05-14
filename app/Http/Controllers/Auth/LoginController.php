@@ -35,7 +35,9 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('blog.articles.index'));
+        return redirect()
+            ->intended(route('blog.articles.index'))
+            ->with('status', __('blog.success-hello-user', ['name' => $request->user()->name]));
     }
 
     /**

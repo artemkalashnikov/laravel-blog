@@ -164,7 +164,7 @@ class ArticleController extends Controller
 
         return redirect()
             ->route('blog.control-panel.articles.edit', $article->id)
-            ->with('status', __('success-article-updated'));
+            ->with('status', __('blog.success-article-updated'));
     }
 
     /**

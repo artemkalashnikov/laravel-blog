@@ -93,4 +93,5 @@ return [
     'success-category-updated'              =>  'Category updated successfully',
     'success-category-deleted'              =>  'Category deleted successfully',
     'success-category-restored'             =>  'Category restored successfully',
+    'success-hello-user'                    =>  'Welcome, :name!',
 ];

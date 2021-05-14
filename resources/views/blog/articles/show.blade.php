@@ -1,42 +1,18 @@
 @include('blog.components.header')
 <div class="flex-grow">
-    <div class="pb-6">
-        <a href="{{ route('blog.articles.index') }}" class="flex items-center justify-center w-32 h-8 text-gray-600 bg-white border border-solid border-gray-600 rounded">Back</a>
+    <div class="pb-6 flex">
+        <a href="{{ route('blog.articles.index') }}" class="flex items-center justify-center w-32 h-8 text-gray-600 bg-white border border-solid border-gray-600 rounded">{{ __('blog.btn-back') }}</a>
+        @if(request()->user() && (request()->user()->isAdmin() || request()->user()->id === $article->user_id))
+            <a href="{{ route('blog.control-panel.articles.edit', $article->id) }}" class="ml-4 flex items-center justify-center w-32 h-8 text-gray-600 bg-white border border-solid border-gray-600 rounded">{{ __('blog.btn-edit') }}</a>
+        @endif
     </div>
-    <form id="data" action="{{ route('blog.articles.store') }}" method="POST">
-        @csrf
-        <label class="flex items-center justify-between mb-4">
-            <span class="font-bold mr-8 select-none">Title:</span>
-            <input class="w-4/5 bg-white border border-solid border-gray-600 rounded py-1" name="title" type="text" placeholder="title" minlength="3" maxlength="200" required>
-        </label>
-        <label class="flex items-start justify-between mb-4">
-            <span class="font-bold mr-8 select-none">Content:</span>
-            <textarea class="w-4/5 h-40 resize-none bg-white border border-solid border-gray-600 rounded py-1" name="content" placeholder="content" required minlength="5" maxlength="10000"></textarea>
-        </label>
-        <label class="flex items-start justify-between mb-4">
-            <span class="font-bold mr-8 select-none">Fragment:</span>
-            <textarea class="w-4/5 h-40 resize-none bg-white border border-solid border-gray-600 rounded py-1" name="fragment" placeholder="fragment" maxlength="500"></textarea>
-        </label>
-        <label class="flex items-center justify-between mb-4">
-            <span class="font-bold mr-8 select-none">Category:</span>
-            <select class="w-4/5 bg-white border border-solid border-gray-600 rounded py-1" name="category_id" required>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}">
-                        {{ $category->title }}
-                    </option>
-                @endforeach
-            </select>
-        </label>
-        <input name="is_published" value="0" type="hidden">
-        <div class="flex items-start justify-between mb-4">
-            <label for="checkbox" class="font-bold mr-8 select-none">Published:</label>
-            <span class="flex items-start w-4/5">
-                <input id="checkbox" class="rounded" name="is_published" type="checkbox" value="1">
-            </span>
-        </div>
-    </form>
-    <div class="flex justify-end">
-        <button form="data" class="w-40 h-8 text-white bg-red-700 border border-solid border-red-700 rounded" type="submit">Send</button>
+    <article class="text-lg text-gray-600 leading-7">
+        {{ $article->content }}
+    </article>
+    <div class="flex text-gray-400 mt-6">
+        <p class="pr-6">{{ __('blog.article-item-category') }} <a class="text-gray-600 underline hover:no-underline hover:text-red-700 " href="{{ route('blog.articles.index', ['category' => $article->category->id]) }}">{{ $article->category->title }}</a></p>
+        <p>{{ __('blog.article-item-author') }} <a class="text-gray-600 underline hover:no-underline hover:text-red-700 " href="{{ route('blog.articles.index', ['author' => $article->user->id]) }}">{{ $article->user->name }}</a></p>
+        <p class="ml-auto">{{ __('blog.article-item-date') }} {{ $article->published_at }}</p>
     </div>
 </div>
 @include('blog.components.footer')

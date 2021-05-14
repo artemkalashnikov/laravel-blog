@@ -61,10 +61,21 @@ class ArticleController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Response
+     * @return Application|Factory|View|\Illuminate\Http\RedirectResponse
      */
     public function show($id)
     {
-        dd('Hello');
+        $article = BlogArticle::on()->find($id);
+
+        if (empty($article)) {
+            return back()
+                ->withErrors(__('error-article-not-found'))
+                ->withInput();
+        }
+
+        return view('blog.articles.show', [
+            'title'     =>  $article->title,
+            'article'   =>  $article,
+        ]);
     }
 }

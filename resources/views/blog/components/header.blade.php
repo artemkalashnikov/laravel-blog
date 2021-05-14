@@ -16,10 +16,11 @@
                 <a href="{{ route('blog.articles.index') }}">{{ $title ?? __('blog.header') }}</a>
             </h1>
             @auth()
+                <p class="ml-auto text-sm text-gray-600">{{ request()->user()->email }}</p>
                 @if(request()->is('control-panel/*'))
-                    <a href="{{ route('blog.articles.index') }}" class="ml-auto flex items-center justify-center w-48 h-8 bg-white border border-solid border-red-700 rounded text-red-700" type="submit">{{ __('blog.btn-exit-control-panel') }}</a>
+                    <a href="{{ route('blog.articles.index') }}" class="ml-8 flex items-center justify-center w-48 h-8 bg-white border border-solid border-red-700 rounded text-red-700" type="submit">{{ __('blog.btn-exit-control-panel') }}</a>
                 @else
-                    <a href="{{ route('blog.control-panel.articles.index') }}" class="ml-auto flex items-center justify-center w-48 h-8 bg-white border border-solid border-red-700 rounded text-red-700" type="submit">{{ __('blog.btn-control-panel') }}</a>
+                    <a href="{{ route('blog.control-panel.articles.index') }}" class="ml-8 flex items-center justify-center w-48 h-8 bg-white border border-solid border-red-700 rounded text-red-700" type="submit">{{ __('blog.btn-control-panel') }}</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}" class="ml-8">
                     @csrf

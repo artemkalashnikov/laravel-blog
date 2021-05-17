@@ -84,6 +84,7 @@ return [
     'error-category-not-updated'            =>  'Category not updated',
     'error-category-not-deleted'            =>  'Category not deleted',
     'error-category-not-restored'           =>  'Category not restored',
+    'error-user-exist'                      =>  'User with this :email is exist',
 
     'success-article-created'               =>  'Article created successfully',
     'success-article-updated'               =>  'Article updated successfully',

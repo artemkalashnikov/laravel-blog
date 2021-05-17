@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class UsersTableSeeder extends Seeder
 {
@@ -15,18 +16,18 @@ class UsersTableSeeder extends Seeder
     {
         $data = [
             [
-                'name'       => 'Alena',
-                'email'      => 'unknown@user.mail',
-                'password'   => bcrypt('54321'),
-                'is_admin'   => false,
-                'created_at' => now(),
+                'name'          =>  'Alena',
+                'email'         =>  'unknown@user.mail',
+                'password'      =>  bcrypt('54321'),
+                'is_admin'      =>  false,
+                'created_at'    =>  now(),
             ],
             [
-                'name'       => 'Artem',
-                'email'      => 'ak74am@gmail.com',
-                'password'   => bcrypt('12345'),
-                'is_admin'   => true,
-                'created_at' => now(),
+                'name'          =>  'Artem',
+                'email'         =>  'ak74am@gmail.com',
+                'password'      =>  bcrypt('12345'),
+                'is_admin'      =>  true,
+                'created_at'    =>  now(),
             ],
         ];
 

@@ -19,6 +19,7 @@ class BlogArticle extends Model
         'content',
         'is_published',
         'published_at',
+        'user_id',
     ];
 
     /**

@@ -43,7 +43,7 @@ class CategoryController extends Controller
      */
     public function store(BlogCategoryRequest $request)
     {
-        $data = $request->all();
+        $data = $request->validated();
         $category = BlogCategory::on()->create($data);
 
         if (!$category->exists) {

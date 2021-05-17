@@ -16,7 +16,7 @@ class CreateBlogArticlesTable extends Migration
         Schema::create('blog_articles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id')->default(1);
-            $table->unsignedBigInteger('user_id')->default(1);
+            $table->unsignedBigInteger('user_id');
             $table->string('title');
             $table->text('fragment')->nullable();
             $table->text('content');

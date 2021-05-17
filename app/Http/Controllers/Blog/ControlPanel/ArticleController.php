@@ -85,7 +85,8 @@ class ArticleController extends Controller
      */
     public function store(BlogArticleRequest $request)
     {
-        $data = $request->all();
+        $data = $request;
+        dd($data);
         $article = BlogArticle::on()->create($data);
 
         if (!$article->exists) {
@@ -153,7 +154,7 @@ class ArticleController extends Controller
                 ->withErrors(__('blog.error-permissions'));
         }
 
-        $data = $request->all();
+        $data = $request->validated();
         $result = $article->update($data);
 
         if (!$result) {

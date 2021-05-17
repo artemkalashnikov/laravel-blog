@@ -2,11 +2,11 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
+use App\Http\Controllers\Blog\ArticleController;
 use App\Http\Controllers\Blog\ControlPanel\ArticleController as ControlPanelArticleController;
 use App\Http\Controllers\Blog\ControlPanel\ArticleTrashController as ControlPanelArticleTrashController;
 use App\Http\Controllers\Blog\ControlPanel\CategoryController as ControlPanelCategoryController;
 use App\Http\Controllers\Blog\ControlPanel\CategoryTrashController as ControlPanelCategoryTrashController;
-use App\Http\Controllers\Blog\ArticleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/', function () {
+    return redirect()->route('blog.articles.index');
+});
 
 Route::get('login', [LoginController::class, 'index'])->name('login.view');
 Route::post('login', [LoginController::class, 'login'])->name('login');

@@ -25,8 +25,15 @@ class RegistrationController extends Controller
      */
     public function store(RegistrationRequest $request)
     {
-        $data = $request->all();
-        $data['password'] = bcrypt($data['password']);
+        $data = $request->validated();
+
+        $user = User::where('email', '=', $request->email)->first();
+        if (!empty($user)) {
+            return redirect(route('registration.view'))
+                ->withErrors([
+                    __('blog.error-user-exist', ['email' => $user->email]),
+                ]);
+        }
 
         /** @var User $user */
         $user = User::on()->create($data);

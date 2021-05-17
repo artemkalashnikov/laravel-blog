@@ -29,10 +29,10 @@ class BlogArticleRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|min:3|max:200',
-            'fragment' => 'max:500',
-            'content' => 'required|string|min:5|max:10000',
-            'category_id' => 'required|integer|exists:blog_categories,id',
+            'title'         =>  'required|min:3|max:200',
+            'fragment'      =>  'max:500',
+            'content'       =>  'required|string|min:5|max:10000',
+            'category_id'   =>  'required|integer|exists:blog_categories,id',
         ];
     }
 }

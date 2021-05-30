@@ -13,7 +13,6 @@ use App\Models\BlogArticle;
 use App\Models\BlogCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller
 {
@@ -38,7 +37,7 @@ class ArticleController extends Controller
         $articles = BlogArticle::on()
             ->filter($filters)
             ->select(['id', 'title', 'fragment', 'is_published', 'published_at', 'user_id', 'category_id', 'created_at'])
-            ->with(['user:id,name', 'category:id,title'])
+            ->with(['user', 'category'])
             ->orderByDesc('published_at')
             ->orderByDesc('id');
 
@@ -85,11 +84,10 @@ class ArticleController extends Controller
      */
     public function store(BlogArticleRequest $request)
     {
-        $data = $request;
-        dd($data);
+        $data = $request->validated();
         $article = BlogArticle::on()->create($data);
 
-        if (!$article->exists) {
+        if (empty($article)) {
             return back()
                 ->withErrors(__('blog.error-article-not-created'))
                 ->withInput();
@@ -106,17 +104,17 @@ class ArticleController extends Controller
      * @param int $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $article = BlogArticle::on()->find($id);
 
         if (empty($article)) {
             return back()
-                ->withErrors(__('error-article-not-found'))
+                ->withErrors(__('blog.error-article-not-found'))
                 ->withInput();
         }
 
-        if (Gate::denies('update', $article)) {
+        if ($request->user()->cannot('update', $article)) {
             return back()
                 ->withErrors(__('blog.error-permissions'));
         }
@@ -149,7 +147,7 @@ class ArticleController extends Controller
                 ->withInput();
         }
 
-        if (Gate::denies('update', $article)) {
+        if ($request->user()->cannot('update', $article)) {
             return back()
                 ->withErrors(__('blog.error-permissions'));
         }
@@ -174,7 +172,7 @@ class ArticleController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $article = BlogArticle::on()->find($id);
 
@@ -184,7 +182,7 @@ class ArticleController extends Controller
                 ->withInput();
         }
 
-        if (Gate::denies('update', $article)) {
+        if ($request->user()->cannot('delete', $article)) {
             return back()
                 ->withErrors(__('blog.error-permissions'));
         }
@@ -193,11 +191,11 @@ class ArticleController extends Controller
 
         if (!$result) {
             return back()
-                ->withErrors(__('error-article-not-deleted'));
+                ->withErrors(__('blog.error-article-not-deleted'));
         }
 
         return redirect()
             ->route('blog.control-panel.articles.index')
-            ->with('status', __('success-article-deleted'));
+            ->with('status', __('blog.success-article-deleted'));
     }
 }

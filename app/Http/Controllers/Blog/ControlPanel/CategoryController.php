@@ -96,7 +96,7 @@ class CategoryController extends Controller
                 ->withInput();
         }
 
-        $data = $request->all();
+        $data = $request->validated();
         $result = $category->update($data);
 
         if (!$result) {

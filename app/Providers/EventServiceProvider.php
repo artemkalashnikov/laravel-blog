@@ -29,5 +29,6 @@ class EventServiceProvider extends ServiceProvider
     {
         \App\Models\BlogCategory::observe(\App\Observers\BlogCategoryObserver::class);
         \App\Models\BlogArticle::observe(\App\Observers\BlogArticleObserver::class);
+        \App\Models\User::observe(\App\Observers\UserObserver::class);
     }
 }

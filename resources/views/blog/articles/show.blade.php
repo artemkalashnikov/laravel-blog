@@ -2,9 +2,9 @@
 <div class="flex-grow">
     <div class="pb-6 flex">
         <a href="{{ route('blog.articles.index') }}" class="flex items-center justify-center w-32 h-8 text-gray-600 bg-white border border-solid border-gray-600 rounded">{{ __('blog.btn-back') }}</a>
-        @if(request()->user() && (request()->user()->isAdmin() || request()->user()->id === $article->user_id))
+        @can('update', $article)
             <a href="{{ route('blog.control-panel.articles.edit', $article->id) }}" class="ml-4 flex items-center justify-center w-32 h-8 text-gray-600 bg-white border border-solid border-gray-600 rounded">{{ __('blog.btn-edit') }}</a>
-        @endif
+        @endcan
     </div>
     <article class="text-lg text-gray-600 leading-7">
         {{ $article->content }}

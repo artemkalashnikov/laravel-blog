@@ -11,6 +11,16 @@ class BlogArticleObserver
      * @param BlogArticle $blogArticle
      * @return void
      */
+    public function creating(BlogArticle $blogArticle)
+    {
+        $blogArticle['user_id'] = request()->user()->id;
+    }
+
+    /**
+     * Handle the BlogArticle "saving" event.
+     * @param BlogArticle $blogArticle
+     * @return void
+     */
     public function saving(BlogArticle $blogArticle)
     {
         $isDirtyIsPublished = $blogArticle->isDirty('is_published');
@@ -21,7 +31,6 @@ class BlogArticleObserver
                 'published_at' => now(),
             ]);
         } else if ($isDirtyIsPublished && !$isPublished){
-
             $blogArticle->fill([
                 'published_at' => null,
             ]);
@@ -51,12 +60,6 @@ class BlogArticleObserver
     public function restoring(BlogArticle $blogArticle)
     {
         $data = request()->all();
-        $blogArticle->fill([
-            'title'        => $data['title'],
-            'content'      => $data['content'],
-            'fragment'     => $data['fragment'],
-            'category_id'  => $data['category_id'],
-            'is_published' => $data['is_published'],
-        ]);
+        $blogArticle->fill($data);
     }
 }

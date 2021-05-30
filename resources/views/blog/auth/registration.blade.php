@@ -3,11 +3,11 @@
     @csrf
     <label class="block">
         <span class="block mb-2">{{ __('blog.auth-form-name') }}</span>
-        <input name="name" type="text" class="bg-white border border-solid border-gray-600 rounded py-0 h-8 block w-full">
+        <input name="name" type="text" class="bg-white border border-solid border-gray-600 rounded py-0 h-8 block w-full" value="{{ old('name') }}">
     </label>
     <label class="block mt-4">
         <span class="block mb-2">{{ __('blog.auth-form-email') }}</span>
-        <input name="email" type="email" class="bg-white border border-solid border-gray-600 rounded py-0 h-8 block w-full">
+        <input name="email" type="email" class="bg-white border border-solid border-gray-600 rounded py-0 h-8 block w-full" value="{{ old('email') }}">
     </label>
     <label class="block mt-4">
         <span class="block mb-2">{{ __('blog.auth-form-password') }}</span>

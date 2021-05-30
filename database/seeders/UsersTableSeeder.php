@@ -24,7 +24,7 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name'          =>  'Artem',
-                'email'         =>  'ak74am@gmail.com',
+                'email'         =>  'tra-ta-ta-ta-ta@gmail.com',
                 'password'      =>  bcrypt('12345'),
                 'is_admin'      =>  true,
                 'created_at'    =>  now(),

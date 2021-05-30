@@ -24,17 +24,26 @@ class ArticlePolicy
     }
 
     /**
+     * Perform update checks.
      *
      * @param User $user
-     * @param BlogArticle $blogArticle
+     * @param BlogArticle $article
      * @return bool
      */
-    public function update(User $user, BlogArticle $blogArticle)
+    public function update(User $user, BlogArticle $article)
     {
-        if ($user->id === $blogArticle->user_id) {
-            return true;
-        }
+        return $user->id === $article->user_id;
+    }
 
-        return false;
+    /**
+     * Perform delete checks.
+     *
+     * @param User $user
+     * @param BlogArticle $article
+     * @return bool
+     */
+    public function delete(User $user, BlogArticle $article)
+    {
+        return $user->id === $article->user_id;
     }
 }

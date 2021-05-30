@@ -14,7 +14,7 @@ class BlogArticleRequest extends FormRequest
      */
     public function authorize()
     {
-        if(Auth::check()) {
+        if (Auth::check()) {
             return true;
         }
 
@@ -32,7 +32,8 @@ class BlogArticleRequest extends FormRequest
             'title'         =>  'required|min:3|max:200',
             'fragment'      =>  'max:500',
             'content'       =>  'required|string|min:5|max:10000',
-            'category_id'   =>  'required|integer|exists:blog_categories,id',
+            'category_id'   =>  'integer|exists:blog_categories,id',
+            'is_published'  =>  'bool',
         ];
     }
 }

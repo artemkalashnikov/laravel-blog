@@ -38,7 +38,7 @@ class ArticleTrashController extends Controller
         $articles = BlogArticle::onlyTrashed()
             ->filter($filters)
             ->select(['id', 'title', 'fragment', 'is_published', 'published_at', 'user_id', 'category_id', 'created_at'])
-            ->with(['user:id,name', 'category:id,title'])
+            ->with(['user', 'category'])
             ->orderByDesc('published_at');
 
         $categories = BlogCategory::on()
@@ -65,7 +65,7 @@ class ArticleTrashController extends Controller
      * @param  int  $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $article = BlogArticle::onlyTrashed()->find($id);
 
@@ -75,7 +75,7 @@ class ArticleTrashController extends Controller
                 ->withInput();
         }
 
-        if (Gate::denies('update', $article)) {
+        if ($request->user()->cannot('update', $article)) {
             return back()
                 ->withErrors(__('blog.error-permissions'));
         }
@@ -108,7 +108,7 @@ class ArticleTrashController extends Controller
                 ->withInput();
         }
 
-        if (Gate::denies('update', $article)) {
+        if ($request->user()->cannot('update', $article)) {
             return back()
                 ->withErrors(__('blog.error-permissions'));
         }
@@ -132,7 +132,7 @@ class ArticleTrashController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $article = BlogArticle::onlyTrashed()->find($id);
 
@@ -142,7 +142,7 @@ class ArticleTrashController extends Controller
                 ->withInput();
         }
 
-        if (Gate::denies('update', $article)) {
+        if ($request->user()->cannot('delete', $article)) {
             return back()
                 ->withErrors(__('blog.error-permissions'));
         }

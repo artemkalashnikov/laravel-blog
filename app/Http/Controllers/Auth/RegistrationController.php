@@ -28,11 +28,10 @@ class RegistrationController extends Controller
         $data = $request->validated();
 
         $user = User::where('email', '=', $request->email)->first();
-        if (!empty($user)) {
-            return redirect(route('registration.view'))
-                ->withErrors([
-                    __('blog.error-user-exist', ['email' => $user->email]),
-                ]);
+        if ($user) {
+            return back()
+                ->withInput()
+                ->withErrors([__('blog.error-user-exist', ['email' => $user->email])]);
         }
 
         /** @var User $user */

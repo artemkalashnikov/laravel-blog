@@ -36,9 +36,10 @@ class ArticleController extends Controller
             ->filter($filters)
             ->published()
             ->select(['id', 'title', 'fragment', 'is_published', 'published_at', 'user_id', 'category_id', 'created_at'])
-            ->with(['user:id,name', 'category:id,title'])
-            ->orderBy('title')
-            ->orderByDesc('published_at');
+            ->with(['user', 'category'])
+            ->orderByDesc('published_at')
+            ->orderBy('title');
+
 
         $categories = BlogCategory::on()
             ->select(['id', 'title'])
@@ -69,7 +70,7 @@ class ArticleController extends Controller
 
         if (empty($article)) {
             return back()
-                ->withErrors(__('error-article-not-found'))
+                ->withErrors(__('blog.error-article-not-found'))
                 ->withInput();
         }
 

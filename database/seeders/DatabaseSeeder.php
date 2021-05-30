@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\BlogArticle;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,6 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UsersTableSeeder::class);
         $this->call(BlogCategoriesTableSeeder::class);
-         \App\Models\BlogArticle::factory(100)->create();
+        BlogArticle::withoutEvents(function () {
+            BlogArticle::factory(100)->create();
+        });
     }
 }

@@ -10,10 +10,16 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->user()) {
+            return redirect()
+                ->route('blog.articles.index')
+                ->with('status', __('blog.already-logged-in', ['name' => $request->user()->name]));
+        }
+
         return view('blog.auth.login', [
             'title' => __('blog.header-login'),
         ]);
@@ -25,7 +31,7 @@ class LoginController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validated();
 
         if (!Auth::attempt($credentials)) {
             return back()

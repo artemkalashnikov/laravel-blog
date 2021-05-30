@@ -12,17 +12,17 @@
 <div class="flex flex-col min-h-screen">
     <header class="bg-gray-100 flex-shrink-0">
         <div class="flex items-center px-8 py-6 container mx-auto ">
-            <h1 class="text-4xl text-red-900 font-bold pr-2">
+            <h1 class="text-4xl text-red-900 font-bold flex-grow">
                 <a href="{{ route('blog.articles.index') }}">{{ $title ?? __('blog.header') }}</a>
             </h1>
             @auth()
-                <p class="ml-auto text-sm text-gray-600">{{ request()->user()->email }}</p>
+                <p class="ml-8 text-sm text-gray-600 flex-shrink-0">{{ request()->user()->email }}</p>
                 @if(request()->is('control-panel/*'))
-                    <a href="{{ route('blog.articles.index') }}" class="ml-8 flex items-center justify-center w-48 h-8 bg-white border border-solid border-red-700 rounded text-red-700" type="submit">{{ __('blog.btn-exit-control-panel') }}</a>
+                    <a href="{{ route('blog.articles.index') }}" class="flex-shrink-0 ml-8 flex items-center justify-center w-48 h-8 bg-white border border-solid border-red-700 rounded text-red-700" type="submit">{{ __('blog.btn-exit-control-panel') }}</a>
                 @else
-                    <a href="{{ route('blog.control-panel.articles.index') }}" class="ml-8 flex items-center justify-center w-48 h-8 bg-white border border-solid border-red-700 rounded text-red-700" type="submit">{{ __('blog.btn-control-panel') }}</a>
+                    <a href="{{ route('blog.control-panel.articles.index') }}" class="flex-shrink-0 ml-8 flex items-center justify-center w-48 h-8 bg-white border border-solid border-red-700 rounded text-red-700" type="submit">{{ __('blog.btn-control-panel') }}</a>
                 @endif
-                <form method="POST" action="{{ route('logout') }}" class="ml-8">
+                <form method="POST" action="{{ route('logout') }}" class="ml-8 flex-shrink-0">
                     @csrf
                     <button class="block w-32 h-8 text-gray-600 bg-white border border-solid border-gray-600 rounded">{{ __('blog.btn-logout') }}</button>
                 </form>

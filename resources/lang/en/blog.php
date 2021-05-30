@@ -84,7 +84,7 @@ return [
     'error-category-not-updated'            =>  'Category not updated',
     'error-category-not-deleted'            =>  'Category not deleted',
     'error-category-not-restored'           =>  'Category not restored',
-    'error-user-exist'                      =>  'User with this :email is exist',
+    'error-user-exist'                      =>  'User with the given email ":email" exists',
 
     'success-article-created'               =>  'Article created successfully',
     'success-article-updated'               =>  'Article updated successfully',
@@ -95,4 +95,6 @@ return [
     'success-category-deleted'              =>  'Category deleted successfully',
     'success-category-restored'             =>  'Category restored successfully',
     'success-hello-user'                    =>  'Welcome, :name!',
+
+    'already-logged-in'                     =>  'Already logged in as :name',
 ];

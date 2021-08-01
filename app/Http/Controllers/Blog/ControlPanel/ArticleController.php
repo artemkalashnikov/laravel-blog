@@ -12,6 +12,7 @@ use App\Http\Requests\BlogArticleRequest;
 use App\Models\BlogArticle;
 use App\Models\BlogCategory;
 use App\Models\User;
+use App\Services\HtmlRenderService;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -88,9 +89,10 @@ class ArticleController extends Controller
      * @param BlogArticleRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(BlogArticleRequest $request)
+    public function store(BlogArticleRequest $request, HtmlRenderService $renderService)
     {
         $data = $request->validated();
+        $data['content'] = $renderService->replaceAllowedTags($data['content']);
         $article = BlogArticle::on()->create($data);
 
         if (empty($article)) {
@@ -101,8 +103,8 @@ class ArticleController extends Controller
 
         if(isset($data['child_ids']))
         {
-        $article->child_articles()->sync($data['child_ids']);
-    }
+            $article->child_articles()->sync($data['child_ids']);
+        }
 
         if(isset($data['parent_ids']))
         {
@@ -159,7 +161,7 @@ class ArticleController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(BlogArticleRequest $request, $id)
+    public function update(BlogArticleRequest $request, $id, HtmlRenderService $renderService)
     {
         $article = BlogArticle::on()->find($id);
 
@@ -175,6 +177,7 @@ class ArticleController extends Controller
         }
 
         $data = $request->validated();
+        $data['content'] = $renderService->replaceAllowedTags($data['content']);
 
         if(isset($data['child_ids']))
         {

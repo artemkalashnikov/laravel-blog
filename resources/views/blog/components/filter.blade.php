@@ -1,8 +1,8 @@
 <aside class="sticky top-6 bg-gray-100 mr-4 rounded py-4 px-8 flex-shrink-0 w-82">
     <h2 class="font-bold pb-2">{{ __('blog.filter-title') }}</h2>
     <form action="{{ url()->current() }}" method="GET">
-        <input class="mb-2 w-full block bg-white border border-solid border-gray-600 rounded py-0 h-8" name="title" type="text" placeholder="{{ __('blog.filter-placeholder-title') }}" @if(!empty(request()->query('title'))) value="{{ request()->query('title') }}" @endif>
-        <select class="mb-2 w-full block bg-white border border-solid border-gray-600 rounded py-0 h-8" name="category">
+        <input class="mb-2 w-full block bg-white border border-solid border-gray-600 rounded py-0 px-2 h-8" name="title" type="text" placeholder="{{ __('blog.filter-placeholder-title') }}" @if(!empty(request()->query('title'))) value="{{ request()->query('title') }}" @endif>
+        <select class="mb-2 w-full block bg-white border border-solid border-gray-600 rounded py-0 px-2 h-8" name="category">
             <option value="" selected>{{ __('blog.filter-placeholder-category') }}</option>
             @foreach($categories as $category)
                 <option value="{{ $category->id }}" @if(!empty(request()->query('category')) && (request()->query('category')) == $category->id) selected @endif>
@@ -11,7 +11,7 @@
             @endforeach
         </select>
         @if(request()->is('control-panel/*') && request()->user()->isAdmin())
-            <select class="mb-4 w-full block bg-white border border-solid border-gray-600 rounded py-0 h-8" name="author">
+            <select class="mb-4 w-full block bg-white border border-solid border-gray-600 rounded py-0 px-2 h-8" name="author">
                 <option value="" selected>{{ __('blog.filter-placeholder-author') }}</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id }}" @if(!empty(request()->query('author')) && (request()->query('author')) == $user->id) selected @endif>
@@ -37,7 +37,7 @@
                 <input type="radio" name="published" value="1" @if(request()->exists('published') && (request()->query('published') == 1)) checked @endif>
             </label>
         @else
-            <select class="mb-4 w-full block bg-white border border-solid border-gray-600 rounded py-0 h-8" name="author">
+            <select class="mb-4 w-full block bg-white border border-solid border-gray-600 rounded py-0 px-2 h-8" name="author">
                 <option value="" selected>{{ __('blog.filter-placeholder-author') }}</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id }}" @if(!empty(request()->query('author')) && (request()->query('author')) == $user->id) selected @endif>

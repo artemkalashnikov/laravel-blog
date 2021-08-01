@@ -12,6 +12,7 @@ use App\Http\Requests\BlogArticleRequest;
 use App\Models\BlogArticle;
 use App\Models\BlogCategory;
 use App\Models\User;
+use App\Services\HtmlRenderService;
 use Illuminate\Http\Request;
 
 class ArticleTrashController extends Controller
@@ -103,10 +104,11 @@ class ArticleTrashController extends Controller
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(BlogArticleRequest $request, $id)
+    public function update(BlogArticleRequest $request, $id, HtmlRenderService $renderService)
     {
         $article = BlogArticle::onlyTrashed()->find($id);
         $data = $request->validated();
+        $data['content'] = $renderService->replaceAllowedTags($data['content']);
 
         if (empty($article)) {
             return back()

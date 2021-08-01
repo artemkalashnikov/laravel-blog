@@ -7,5 +7,6 @@
 </div>
 @include('blog.components.success-popover')
 @include('blog.components.error-popover')
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

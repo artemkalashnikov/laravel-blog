@@ -1,0 +1,13 @@
+/* ============= Libraries ============= */
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
+
+@import "~highlight.js/styles/default.css";
+
+/* ===================================== */
+
+/* User's styles */
+@import "vendor.css";

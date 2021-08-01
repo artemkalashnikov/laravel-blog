@@ -7,7 +7,7 @@
         @endcan
     </div>
     <article class="text-lg text-gray-600 leading-7">
-        {{ $article->content }}
+        {!! $article->content !!}
     </article>
     <div class="flex text-gray-400 mt-6">
         <p class="pr-6">{{ __('blog.article-item-category') }} <a class="text-gray-600 underline hover:no-underline hover:text-red-700 " href="{{ route('blog.articles.index', ['category' => $article->category->id]) }}">{{ $article->category->title }}</a></p>

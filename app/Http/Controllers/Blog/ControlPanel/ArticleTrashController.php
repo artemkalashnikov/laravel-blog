@@ -13,7 +13,6 @@ use App\Models\BlogArticle;
 use App\Models\BlogCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class ArticleTrashController extends Controller
 {
@@ -84,10 +83,16 @@ class ArticleTrashController extends Controller
             ->select(['id', 'title'])
             ->get();
 
+        $articles = BlogArticle::on()
+            ->select(['id', 'title'])
+            ->orderByDesc('id')
+            ->get();
+
         return view('blog.control-panel.trash.articles.edit', [
-            'title'         =>  __('blog.header-article-edit'),
-            'article'       =>  $article,
-            'categories'    =>  $categories,
+            'title'             =>  __('blog.header-article-edit'),
+            'current_article'   =>  $article,
+            'categories'        =>  $categories,
+            'articles'          =>  $articles,
         ]);
     }
 
@@ -101,6 +106,7 @@ class ArticleTrashController extends Controller
     public function update(BlogArticleRequest $request, $id)
     {
         $article = BlogArticle::onlyTrashed()->find($id);
+        $data = $request->validated();
 
         if (empty($article)) {
             return back()
@@ -111,6 +117,18 @@ class ArticleTrashController extends Controller
         if ($request->user()->cannot('update', $article)) {
             return back()
                 ->withErrors(__('blog.error-permissions'));
+        }
+
+        $article->fill($data);
+
+        if(isset($data['child_ids']))
+        {
+            $article->child_articles()->sync($data['child_ids']);
+        }
+
+        if(isset($data['parent_ids']))
+        {
+            $article->parent_articles()->sync($data['parent_ids']);
         }
 
         $result = $article->restore();

@@ -51,6 +51,32 @@ class BlogArticle extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function child_articles()
+    {
+        return $this->belongsToMany(
+            __CLASS__,
+            'blog_parent_article',
+            'parent_id',
+            'child_id'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function parent_articles()
+    {
+        return $this->belongsToMany(
+            __CLASS__,
+            'blog_parent_article',
+            'child_id',
+            'parent_id',
+        );
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

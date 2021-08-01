@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         BlogArticle::withoutEvents(function () {
             BlogArticle::factory(100)->create();
         });
+        $this->call(BlogParentArticleSeeder::class);
     }
 }

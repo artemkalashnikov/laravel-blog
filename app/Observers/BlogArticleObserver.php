@@ -50,16 +50,4 @@ class BlogArticleObserver
             'published_at' => null,
         ]);
     }
-
-    /**
-     * Handle the BlogArticle "restoring" event.
-     *
-     * @param  \App\Models\BlogArticle  $blogArticle
-     * @return void
-     */
-    public function restoring(BlogArticle $blogArticle)
-    {
-        $data = request()->all();
-        $blogArticle->fill($data);
-    }
 }

@@ -30,6 +30,32 @@
                 @endforeach
             </select>
         </label>
+        <label class="flex items-center justify-between mb-4">
+            <span class="font-bold mr-8 select-none">{{ __('blog.article-form-parent-articles') }}</span>
+            <div class="w-4/5 py-1">
+                <select class="w-full bg-white border border-solid border-gray-600 rounded" name="parent_ids[]" multiple="multiple" size="10">
+                    @foreach($all_articles as $article)
+                        <option value="{{ $article->id }}">
+                            {{ $article->title }}
+                        </option>
+                    @endforeach
+                </select>
+                <p class="pt-4">{{ __('blog.article-form-relations-description') }}</p>
+            </div>
+        </label>
+        <label class="flex items-center justify-between mb-4">
+            <span class="font-bold mr-8 select-none">{{ __('blog.article-form-child-articles') }}</span>
+            <div class="w-4/5 py-1">
+                <select class="w-full bg-white border border-solid border-gray-600 rounded" name="child_ids[]" multiple="multiple" size="10">
+                    @foreach($all_articles as $article)
+                        <option value="{{ $article->id }}">
+                            {{ $article->title }}
+                        </option>
+                    @endforeach
+                </select>
+                <p class="pt-4">{{ __('blog.article-form-relations-description') }}</p>
+            </div>
+        </label>
         <input name="is_published" value="0" type="hidden">
         <div class="flex items-start justify-between mb-4">
             <label for="checkbox" class="font-bold mr-8 select-none">{{ __('blog.article-form-published') }}</label>

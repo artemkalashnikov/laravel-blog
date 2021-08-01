@@ -70,9 +70,15 @@ class ArticleController extends Controller
             ->select(['id', 'title'])
             ->get();
 
+        $articles = BlogArticle::on()
+            ->select(['id', 'title'])
+            ->orderByDesc('id')
+            ->get();
+
         return view('blog.control-panel.articles.create', [
             'title'         =>  __('blog.header-article-create'),
             'categories'    =>  $categories,
+            'all_articles'  =>  $articles,
         ]);
     }
 
@@ -91,6 +97,16 @@ class ArticleController extends Controller
             return back()
                 ->withErrors(__('blog.error-article-not-created'))
                 ->withInput();
+        }
+
+        if(isset($data['child_ids']))
+        {
+        $article->child_articles()->sync($data['child_ids']);
+    }
+
+        if(isset($data['parent_ids']))
+        {
+            $article->parent_articles()->sync($data['parent_ids']);
         }
 
         return redirect()
@@ -123,10 +139,16 @@ class ArticleController extends Controller
             ->select(['id', 'title'])
             ->get();
 
+        $articles = BlogArticle::on()
+            ->select(['id', 'title'])
+            ->orderByDesc('id')
+            ->get();
+
         return view('blog.control-panel.articles.edit', [
-            'title'         =>  __('blog.header-article-edit'),
-            'article'       =>  $article,
-            'categories'    =>  $categories,
+            'title'             =>  __('blog.header-article-edit'),
+            'current_article'   =>  $article,
+            'categories'        =>  $categories,
+            'articles'          =>  $articles,
         ]);
     }
 
@@ -153,6 +175,17 @@ class ArticleController extends Controller
         }
 
         $data = $request->validated();
+
+        if(isset($data['child_ids']))
+        {
+            $article->child_articles()->sync($data['child_ids']);
+        }
+
+        if(isset($data['parent_ids']))
+        {
+            $article->parent_articles()->sync($data['parent_ids']);
+        }
+
         $result = $article->update($data);
 
         if (!$result) {
